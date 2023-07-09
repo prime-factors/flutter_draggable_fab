@@ -41,7 +41,7 @@ class _DraggableFabState extends State<DraggableFab> {
       securityTop = 100;
     }
 
-    WidgetsBinding.instance!
+    WidgetsBinding.instance
         .addPostFrameCallback((_) => _getWidgetSize(context));
   }
 
