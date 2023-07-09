@@ -9,10 +9,15 @@ import 'package:flutter/material.dart';
 class DraggableFab extends StatefulWidget {
   final Widget child;
   final Offset? initPosition;
+  final double securityTop;
   final double securityBottom;
 
   const DraggableFab(
-      {Key? key, required this.child, this.initPosition, this.securityBottom: 0})
+      {Key? key,
+      required this.child,
+      this.initPosition,
+      this.securityTop = 145,
+      this.securityBottom = 0})
       : super(key: key);
 
   @override
@@ -75,19 +80,19 @@ class _DraggableFabState extends State<DraggableFab> {
     switch (_getAnchor(targetOffset)) {
       case Anchor.LEFT_FIRST:
         this._left = _widgetSize.width / 2;
-        this._top = max(_widgetSize.height / 2, targetOffset.dy);
+        this._top = max(widget.securityTop, targetOffset.dy);
         break;
       case Anchor.TOP_FIRST:
         this._left = max(_widgetSize.width / 2, targetOffset.dx);
-        this._top = _widgetSize.height / 2;
+        this._top = widget.securityTop;
         break;
       case Anchor.RIGHT_SECOND:
         this._left = _screenWidth - _widgetSize.width;
-        this._top = max(_widgetSize.height, targetOffset.dy);
+        this._top = max(widget.securityTop, targetOffset.dy);
         break;
       case Anchor.TOP_SECOND:
         this._left = min(_screenWidth - _widgetSize.width, targetOffset.dx);
-        this._top = _widgetSize.height / 2;
+        this._top = widget.securityTop;
         break;
       case Anchor.LEFT_THIRD:
         this._left = _widgetSize.width / 2;
