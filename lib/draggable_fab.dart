@@ -1,5 +1,6 @@
 library draggable_fab;
 
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,14 +10,12 @@ import 'package:flutter/material.dart';
 class DraggableFab extends StatefulWidget {
   final Widget child;
   final Offset? initPosition;
-  final double securityTop;
   final double securityBottom;
 
   const DraggableFab(
       {Key? key,
       required this.child,
       this.initPosition,
-      this.securityTop = 145,
       this.securityBottom = 0})
       : super(key: key);
 
@@ -30,9 +29,18 @@ class _DraggableFabState extends State<DraggableFab> {
   double _screenWidth = 0.0, _screenHeight = 0.0;
   double? _screenWidthMid, _screenHeightMid;
 
+  late double securityTop = 0;
+
   @override
   void initState() {
     super.initState();
+
+    if (Platform.isIOS) {
+      securityTop = 150;
+    } else if (Platform.isAndroid) {
+      securityTop = 100;
+    }
+
     WidgetsBinding.instance!
         .addPostFrameCallback((_) => _getWidgetSize(context));
   }
@@ -80,19 +88,19 @@ class _DraggableFabState extends State<DraggableFab> {
     switch (_getAnchor(targetOffset)) {
       case Anchor.LEFT_FIRST:
         this._left = _widgetSize.width / 2;
-        this._top = max(widget.securityTop, targetOffset.dy);
+        this._top = max(securityTop, targetOffset.dy);
         break;
       case Anchor.TOP_FIRST:
-        this._left = max(_widgetSize.width / 2, targetOffset.dx);
-        this._top = widget.securityTop;
+        this._left = _widgetSize.width / 2;
+        this._top = securityTop;
         break;
       case Anchor.RIGHT_SECOND:
         this._left = _screenWidth - _widgetSize.width;
-        this._top = max(widget.securityTop, targetOffset.dy);
+        this._top = max(securityTop, targetOffset.dy);
         break;
       case Anchor.TOP_SECOND:
-        this._left = min(_screenWidth - _widgetSize.width, targetOffset.dx);
-        this._top = widget.securityTop;
+        this._left = _screenWidth - _widgetSize.width;
+        this._top = securityTop;
         break;
       case Anchor.LEFT_THIRD:
         this._left = _widgetSize.width / 2;
